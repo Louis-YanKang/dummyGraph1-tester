@@ -6,10 +6,9 @@
 #include <utility>
 #include <cassert>
 #include <omp.h>
-#include <cuda_runtime.h>
 #include "device_launch_parameters.h"
-#include "util.cu"
-#include <cuda.h>
+
+#include "dummyGraph1.h"
 
 using namespace std;
 

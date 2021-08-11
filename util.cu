@@ -1,7 +1,6 @@
 #include <iostream>
-#include "dummyGraph1.h"
 
-
+#if __CUDA_ARCH__ < 600
 __device__ int myAtomicAdd(int *address, int incr)
 {
     // Create an initial guess for the value stored at *address.
@@ -17,7 +16,7 @@ __device__ int myAtomicAdd(int *address, int incr)
 
     return oldValue;
 }
-
+#endif
 
 __global__ void kernel(int *sharedInteger)
 {
