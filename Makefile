@@ -15,7 +15,7 @@ all: $(TARGET)
 	$(CXX) $(CXXFLAGS) -c -o $@ $^
 
 $(TARGET):  $(OBJ)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) -cuda $^ -o $@
 
 clean:
 	rm -rf *~ $(OBJ) $(TARGET)
