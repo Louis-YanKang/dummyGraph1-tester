@@ -196,6 +196,7 @@ void nbrscan_atomic(Dummy* d)
   //int new_val=100;
   int p = 20;
   atarr = (int*)malloc(n_*sizeof(int));
+  memset(&atarr, 0, n_*sizeof(int));
   //cudaMalloc (&atarr, n_*sizeof(int));
   //cudaMemcpy(atarr, n_*sizeof(int), cudaMemcpyHostToDevice);
 
@@ -211,13 +212,11 @@ void nbrscan_atomic(Dummy* d)
     for (int e = d->eidx_[i]; e < d->eidx_[i+1]; e++)
     {
       Edge const& edge = d->elist_[e];
-      
-     atarr[i] += 1;
-
+     
+      //atarr[i] += 1;
       //kernel<<<1,1>>>(&atarr[i]);
-     // myAtomicAdd(atarr[i], p);
-     //atarr[i] += 1;
-     int res =  fetch_and_add<int>(&atarr[i], p);
+      // myAtomicAdd(atarr[i], p);
+      int res =  fetch_and_add<int>(&atarr[i], p);
 
     }
   }

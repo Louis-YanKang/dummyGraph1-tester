@@ -1,17 +1,21 @@
-CC = nvcc
 CXX = nvc++
+CC = nvcc
 
+CXXFLAGS = -mp=gpu -cuda -DUSE_OMP_ACCELERATOR
 
-all: util dummygraph1 bin
+OBJ = util.o dummyGraph1.o 
+TARGET = tt5
 
-util: 
-	${CC} -c util.cu
+all: $(TARGET)
 
-dummygraph1:
-	${CXX} -c -I. -mp=gpu -cuda -DUSE_OMP_ACCELERATOR dummyGraph1.cpp
+%.o: %.cu
+	$(CC) -c -o $@ $^
 
-bin:
-	${CXX} -mp=gpu -cuda util.o dummyGraph1.o -o tt5
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $^
+
+$(TARGET):  $(OBJ)
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -f util.o dummyGraph1.o tt5
+	rm -rf *~ $(OBJ) $(TARGET)
