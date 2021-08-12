@@ -8,7 +8,7 @@
 #include <omp.h>
 #include "device_launch_parameters.h"
 
-#include "dummyGraph1.h"
+#include "util.h"
 
 using namespace std;
 
