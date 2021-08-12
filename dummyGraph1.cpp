@@ -215,7 +215,7 @@ void nbrscan_atomic(Dummy* d)
      
       //atarr[i] += 1;
       //kernel<<<1,1>>>(&atarr[i]);
-      // myAtomicAdd(atarr[i], p);
+      //myAtomicAdd(&atarr[i], p);
       int res =  fetch_and_add<int>(&atarr[i], p);
 
     }
