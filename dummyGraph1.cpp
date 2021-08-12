@@ -203,7 +203,8 @@ void nbrscan_atomic(Dummy* d)
 #ifdef USE_OMP_ACCELERATOR
 #pragma omp target teams distribute parallel for \
   map(to: d->eidx_[0:n_+1], d->elist_[0:m_]) \
-  map(from: d->celist_[0:m_])
+  map(from: d->celist_[0:m_]) \
+  map(tofrom: atarr[0:n_]) 
 #else
 #pragma omp parallel for
 #endif
