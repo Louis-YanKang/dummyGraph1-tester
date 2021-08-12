@@ -214,13 +214,14 @@ void nbrscan_atomic(Dummy* d)
       
      atarr[i] += 1;
 
-      kernel<<<1,1>>>(&atarr[i]);
+      //kernel<<<1,1>>>(&atarr[i]);
      // myAtomicAdd(atarr[i], p);
      //atarr[i] += 1;
+     int res =  fetch_and_add<int>(&atarr[i], p);
 
     }
   }
-    std::cout <<"---value update-----" << atarr[n_-1] <<endl;
+    std::cout <<"---value update-----" << atarr[n_-1] << std::endl;
 
   //cudaMemcpy(atarr, n_*sizeof(int), cudaMemcpyDeviceToHost);
   //cudaFree(atarr);
