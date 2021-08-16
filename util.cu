@@ -1,8 +1,5 @@
 #include <iostream>
 
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-
-
 __device__ int myAtomicAdd(int *address, int incr)
 {
     // Create an initial guess for the value stored at *address.
@@ -31,10 +28,9 @@ __global__ void kernel(int *sharedInteger)
     myAtomicAdd(sharedInteger, 1);
 }
 
-template __device__ int fetch_and_add<int>(int* x, int inc);
-//template __device__ long fetch_and_add<long>(long* x, long inc);
-//template __device__ float fetch_and_add<float>(float* x, float inc);
-//template __device__ double fetch_and_add<double>(double* x, double inc);
+//template __device__ long fetch_and_add<long>(long*, long);
+//template __device__ float fetch_and_add<float>(float*, float);
+//template __device__ double fetch_and_add<double>(double*, double);
 
 
-#endif
+template __device__ int fetch_and_add<int>(int*, int);

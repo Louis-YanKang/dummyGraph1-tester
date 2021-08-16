@@ -8,7 +8,7 @@
 #include <omp.h>
 #include "device_launch_parameters.h"
 
-#include "util.h"
+#include "util.cuh"
 
 using namespace std;
 

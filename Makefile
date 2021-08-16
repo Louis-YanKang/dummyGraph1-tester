@@ -3,13 +3,13 @@ CC = nvcc
 
 CXXFLAGS = -mp=gpu -cuda -DUSE_OMP_ACCELERATOR
 
-OBJ = util.o dummyGraph1.o 
+OBJ = dummyGraph1.o util.o 
 TARGET = tt5
 
 all: $(TARGET)
 
 %.o: %.cu
-	$(CC) -c -o $@ $^
+	$(CC) -dc -o $@ $^
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $^
