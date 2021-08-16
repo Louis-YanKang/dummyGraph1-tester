@@ -1,5 +1,5 @@
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef UTIL_CUH_
+#define UTIL_CUH_
 
 
 __device__ int myAtomicAdd(int *address, int incr);

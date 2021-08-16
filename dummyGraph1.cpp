@@ -190,21 +190,28 @@ void nbrscan_atomic(Dummy* d)
 {
   const long n_ = d->get_n();
   const long m_ = d->get_m();
-  int* atarr;
-    //[n_]; 
-  //int old_val=10;
-  //int new_val=100;
-  int p = 20;
-  atarr = (int*)malloc(n_*sizeof(int));
-  memset(&atarr, 0, n_*sizeof(int));
-  //cudaMalloc (&atarr, n_*sizeof(int));
-  //cudaMemcpy(atarr, n_*sizeof(int), cudaMemcpyHostToDevice);
+  int *atarr, *atarr_dev;
+    
+  int h = omp_get_initial_device();
+  int t = omp_get_default_device();
+
+  if (omp_get_num_devices() < 1 || t < 0)
+  {
+    std::cout << " ERROR: No device found.\n";
+    std::abort();
+  }
+
+  atarr = new int[n_];
+  memset(atarr, 0, sizeof(int)*n_);
+  
+  atarr_dev = (int*)omp_target_alloc(sizeof(int)*n_, t);
+  omp_target_memcpy(atarr_dev, atarr, sizeof(int)*n_, 0, 0, t, h);
 
 #ifdef USE_OMP_ACCELERATOR
 #pragma omp target teams distribute parallel for \
   map(to: d->eidx_[0:n_+1], d->elist_[0:m_]) \
   map(from: d->celist_[0:m_]) \
-  map(tofrom: atarr[0:n_]) 
+  is_device_ptr(atarr_dev)
 #else
 #pragma omp parallel for
 #endif
@@ -216,16 +223,15 @@ void nbrscan_atomic(Dummy* d)
      
       //atarr[i] += 1;
       //kernel<<<1,1>>>(&atarr[i]);
-      //myAtomicAdd(&atarr[i], p);
-      int res =  fetch_and_add<int>(&atarr[i], p);
-
+      //myAtomicAdd(&atarr_dev[i], 1);
+      int res =  fetch_and_add<int>(&atarr_dev[i], 1);
     }
   }
-    std::cout <<"---value update-----" << atarr[n_-1] << std::endl;
 
-  //cudaMemcpy(atarr, n_*sizeof(int), cudaMemcpyDeviceToHost);
-  //cudaFree(atarr);
-  free(atarr);
+  omp_target_memcpy(atarr, atarr_dev, sizeof(int)*n_, 0, 0, h, t);
+  omp_target_free(atarr_dev, t);
+  std::cout <<"---value update-----" << atarr[n_-1] << std::endl;
+  delete[] atarr;
 }
 
 
@@ -252,6 +258,8 @@ int main(int argc, char *argv[])
   std::cout << "#Vertices: " << n << ", #Edges: " << m << std::endl;
   Dummy *d = new Dummy(n, m);
   
+
+
   //d.print_edges();
   // d.nbrscan();
  // nbrscan_free(d);
